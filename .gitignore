@@ -1,0 +1,14 @@
+/cnn_env/
+/cnn_env
+cnn_env/
+/.ipynb_checkpoints/
+*.ipynb_checkpoints
+*.pyc
+__pycache__/
+*.pkl
+*.pkl.gz
+*.h5
+*.hdf5
+*.csv
+*.json
+*.log
