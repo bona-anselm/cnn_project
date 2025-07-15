@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 
 
 # ---- Step 1: Define user credentials ----
-names = ['Alice', 'Bob', 'Bona']
-usernames = ['anayo', 'bejoy', 'bona']
-passwords = ['anayo123', 'bejoy123', 'bona123']
+names = ['Alice', 'Bejoy', 'Bona', 'Daniel']
+usernames = ['anayo', 'bejoy', 'bona', 'daniel']
+passwords = ['anayo123', 'bejoy123', 'bona123', 'dan123']
 
 # ---- Step 2: Hash passwords ----
 hashed_passwords = stauth.Hasher(passwords).generate()
@@ -23,6 +23,7 @@ credentials = {
         usernames[0]: {"name": names[0], "password": hashed_passwords[0]},
         usernames[1]: {"name": names[1], "password": hashed_passwords[1]},
         usernames[2]: {"name": names[2], "password": hashed_passwords[2]},
+        usernames[3]: {"name": names[3], "password": hashed_passwords[3]},
     }
 }
 
