@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 
 
 # ---- Step 1: Define user credentials ----
-names = ['Alice', 'Bob']
-usernames = ['alice123', 'bob456']
-passwords = ['123', '456']  # Plain text for now, we'll hash them
+names = ['Alice', 'Bob', 'Bona']
+usernames = ['anayo', 'bejoy', 'bona']
+passwords = ['anayo123', 'bejoy123', 'bona123']
 
 # ---- Step 2: Hash passwords ----
 hashed_passwords = stauth.Hasher(passwords).generate()
@@ -22,6 +22,7 @@ credentials = {
     "usernames": {
         usernames[0]: {"name": names[0], "password": hashed_passwords[0]},
         usernames[1]: {"name": names[1], "password": hashed_passwords[1]},
+        usernames[2]: {"name": names[2], "password": hashed_passwords[2]},
     }
 }
 
@@ -45,7 +46,7 @@ elif auth_status:
     # Show logout in the sidebar
     authenticator.logout("Logout", "sidebar")
 
-    st.success(f"Welcome, {name} 👋")
+    st.success(f"Welcome, {name}!")
     st.write("You're now authenticated and can access the fraud detection dashboard.")
 
 
@@ -59,7 +60,8 @@ elif auth_status:
 
     # Set the title of the app
     st.title("Credit Card Fraud Detection App")
-    st.write("Enter transaction features (V1 to V28, Time, and Amount) to predict fraud.")
+    st.write("Enter transaction features (V1 to V28, Time, and Amount) to predict fraud on the Sidebar.")
+    st.write("You can also upload a CSV file with the same features for bulk fraud detection.")
 
 
     # Sidebar inputs for all 30 features
@@ -73,6 +75,7 @@ elif auth_status:
     st.subheader("Upload CSV for Bulk Fraud Detection")
 
     uploaded_file = st.file_uploader("Upload CSV file with 30 features", type=['csv'])
+    
 
     def plot_roc(y_true, y_probs):
         fpr, tpr, _ = roc_curve(y_true, y_probs)
@@ -109,9 +112,9 @@ elif auth_status:
             input_data_reshaped = np.array(input_data).reshape(-1, 30, 1)
             predictions = model.predict(input_data_reshaped)
             df_uploaded['Fraud_Probability'] = predictions
-            df_uploaded['Prediction'] = (predictions > 0.5).astype(int)
-            # threshold = st.slider("Set classification threshold", 0.0, 1.0, 0.5)
-            # df_uploaded['Prediction'] = (predictions > threshold).astype(int)
+            #df_uploaded['Prediction'] = (predictions > 0.5).astype(int)
+            threshold = st.slider("Set classification threshold", 0.0, 1.0, 0.5)
+            df_uploaded['Prediction'] = (predictions > threshold).astype(int)
 
             st.write("Prediction Results:")
             st.dataframe(df_uploaded[['Fraud_Probability', 'Prediction']].head(10))
@@ -121,6 +124,12 @@ elif auth_status:
             st.download_button("Download Results", csv_out, "fraud_predictions.csv", "text/csv")
         else:
             st.warning("Uploaded file must include 'Time' and 'Amount' columns.")
+
+        # Histogram of Fraud Probabilities
+        st.subheader("Histogram of Fraud Probabilities")
+        fig, ax = plt.subplots()
+        ax.hist(df_uploaded['Fraud_Probability'], bins=20)
+        st.pyplot(fig)
 
         # ROC Curve for uploaded file (only if true labels available)
         # if 'Class' in df_uploaded.columns:
